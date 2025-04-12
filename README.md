@@ -3,6 +3,8 @@ This project is a web-based application built using Django that predicts the pre
 
 
 📌 Features
+
+
 🧠 CKD Prediction using a pre-trained ML model (model.pkl) and scaler (scaler.pkl)
 
 🩻 Form-based input for relevant clinical parameters
