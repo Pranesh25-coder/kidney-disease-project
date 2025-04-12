@@ -1,44 +1,3 @@
-# import numpy as np
-# import joblib
-# from django.shortcuts import render
-# from django.http import JsonResponse
-# from .forms import MedicalRecordForm
-
-# # Load the trained model
-# model = joblib.load("kidney_disease_xgb_model.pkl")
-
-# def predict_kidney_disease(request):
-#     if request.method == 'POST':
-#         try:
-#             required_fields = ['wc', 'bu', 'bgr', 'sc', 'pcv', 'al', 'hemo', 'age', 'su', 'htn']
-#             input_data = []
-
-#             for field in required_fields:
-#                 value = request.POST.get(field)
-#                 if not value:
-#                     return JsonResponse({"error": f"Missing input: {field}"}, status=400)
-#                 input_data.append(float(value))
-
-#             input_array = np.array([input_data])
-#             print("Input Data:", input_array)
-
-#             # Make predictions
-#             prediction = model.predict(input_array)
-#             probability = model.predict_proba(input_array)[:, 1]  # Get probability of CKD
-
-#             # Convert float32 to float for JSON serialization
-#             probability = float(probability[0])
-
-#             result = "CKD Detected" if 0.004 <= probability <= 0.0077 else "No CKD"
-
-#             return JsonResponse({"prediction": result, "probability": probability})
-
-#         except ValueError as e:
-#             return JsonResponse({"error": f"Invalid value: {str(e)}"}, status=400)
-#         except Exception as e:
-#             return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
-
-#     return render(request, 'predictor/forms.html', {"form": MedicalRecordForm()})
 
 import numpy as np
 import joblib
@@ -47,7 +6,7 @@ from .forms import MedicalRecordForm
 import google.generativeai as genai
 
 # Configure Gemini
-genai.configure(api_key="AIzaSyCojMDHvo5C3L8VD4fYmFJNJlH4CJ3HyeA")
+genai.configure(api_key="your_Api_key")
 chat = genai.GenerativeModel("gemini-2.0-flash").start_chat()
 
 # Load the scaler and model
