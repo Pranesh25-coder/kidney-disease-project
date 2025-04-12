@@ -1,5 +1,7 @@
 🩺 Kidney Disease Predictor + Gemini Chatbot (Django App)
 This project is a web-based application built using Django that predicts the presence of Chronic Kidney Disease (CKD) based on medical inputs and provides an AI-powered chatbot for answering kidney-related health queries using Gemini (Google Generative AI).
+
+
 📌 Features
 🧠 CKD Prediction using a pre-trained ML model (model.pkl) and scaler (scaler.pkl)
 
