@@ -12,21 +12,21 @@ This project is a web-based application built using Django that predicts the pre
 📊 CKD probability score with a clear diagnosis result
 
 📁 Project Structure
-graphql
-
-kidney_disease_project/
-│
-├── predictor/
-│   ├── views.py           # Prediction logic & Gemini chatbot integration
-│   ├── forms.py           # MedicalRecordForm for input validation
-│   ├── templates/
-│   │   ├── forms.html     # Input form
-│   │   ├── result.html    # Prediction result
-│   │   └── chatbot.html   # Chatbot UI
-├── model.pkl              # Trained machine learning model
-├── scaler (2).pkl         # Scaler used for preprocessing input data
-├── manage.py              # Django management file
-└── README.md              # This file
+    graphql
+    
+    kidney_disease_project/
+    │
+    ├── predictor/
+    │   ├── views.py           # Prediction logic & Gemini chatbot integration
+    │   ├── forms.py           # MedicalRecordForm for input validation
+    │   ├── templates/
+    │   │   ├── forms.html     # Input form
+    │   │   ├── result.html    # Prediction result
+    │   │   └── chatbot.html   # Chatbot UI
+    ├── model.pkl              # Trained machine learning model
+    ├── scaler (2).pkl         # Scaler used for preprocessing input data
+    ├── manage.py              # Django management file
+    └── README.md              # This file
 ⚙️ Setup Instructions
 1. Clone the repo and move into the project folder:
 bash
