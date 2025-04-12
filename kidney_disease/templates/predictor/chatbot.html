@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chronic Kidney disease Chatbot - Kidney Disease Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --dark: #1b263b;
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --radius: 12px;
+            --shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        .chat-header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-header i {
+            font-size: 24px;
+        }
+
+        .chat-header h2 {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .chat-header small {
+            display: block;
+            font-weight: 300;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafcff;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: white;
+            color: var(--dark);
+            border: 1px solid #e0e4e8;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .bot-message::before {
+            content: "";
+            position: absolute;
+            left: -8px;
+            top: 12px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid white;
+        }
+
+        .user-message::before {
+            content: "";
+            position: absolute;
+            right: -8px;
+            top: 12px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-left: 8px solid var(--primary);
+        }
+
+        .chat-input {
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #e0e4e8;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e0e4e8;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--primary-light);
+        }
+
+        .chat-input button {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 0 20px;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-input button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .chat-input button:active {
+            transform: translateY(0);
+        }
+
+        .typing-indicator {
+            display: flex;
+            padding: 10px 15px;
+            background-color: white;
+            border-radius: var(--radius);
+            align-self: flex-start;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 10px;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: var(--primary-light);
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: bounce 1.5s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: white;
+            color: var(--primary);
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateX(-3px);
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin-bottom: 20px;
+        }
+
+        .info-card h4 {
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .info-card p {
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        /* Suggestions Box Styles */
+        .suggestions-box {
+            margin-top: 15px;
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .suggestions-box h4 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .suggestion-form {
+            display: inline-block;
+        }
+        
+        .suggestion-form button {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .suggestion-form button:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                height: 90vh;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+
+            .suggestions {
+                gap: 8px;
+            }
+            
+            .suggestion-form button {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+  <div class="chat-container">
+    <!-- Header -->
+    <div class="chat-header">
+      <i class="fas fa-robot"></i>
+      <div>
+        <h2>Kidney Disease Assistant</h2>
+        <small>Power by Kidney Admin</small>
+      </div>
+    </div>
+
+    <!-- Message Display Area -->
+    <div class="chat-messages">
+      <!-- Intro Card -->
+      <div class="info-card">
+        <h4><i class="fas fa-info-circle"></i> How can I help you today?</h4>
+        <p>Ask me anything about kidney disease symptoms, prevention, treatment options, or general information.</p>
+      </div>
+
+      <!-- Static Greeting -->
+      <div class="message bot-message">
+        Hello! I'm your Kidney Health Assistant. How can I assist you today?
+      </div>
+
+      <!-- Chat Loop -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="message {% if message.sender == 'user' %}user-message{% else %}bot-message{% endif %}">
+            {{ message.text }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Bot Response -->
+      {% if response %}
+        <div class="message bot-message">
+          {{ response }}
+        </div>
+      {% endif %}
+
+      <!-- Suggestions -->
+      {% if suggestions %}
+        <div class="suggestions-box">
+          <h4>You might want to ask:</h4>
+          <div class="suggestions">
+            {% for suggestion in suggestions %}
+            <form method="post" class="suggestion-form">
+              {% csrf_token %}
+              <input type="hidden" name="message" value="{{ suggestion }}">
+              <button type="submit">{{ suggestion }}</button>
+            </form>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Input Form -->
+    <form method="post" class="chat-input">
+      {% csrf_token %}
+      <input type="text" name="message" placeholder="Type your message..." required>
+      <button type="submit"><i class="fas fa-paper-plane"></i> Send</button>
+    </form>
+  </div>
+</body>
+</html>
